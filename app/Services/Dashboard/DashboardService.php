@@ -21,6 +21,8 @@ class DashboardService
 
     /**
      * Summary of execute
+     * @param User $user
+     * @return array
      */
     public function execute(User $user): array
     {
@@ -46,8 +48,8 @@ class DashboardService
 
     /**
      * Summary of getCurrentMonth
-     *
-     * @return array
+     *@param string $employeeId
+     *@return array
      */
     private function getCurrentMonth(string $employeeId)
     {

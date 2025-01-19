@@ -15,14 +15,14 @@ class HourWorkedEntryService
 
     /**
      * Summary of execute
-     *
-     * @param  mixed  $startTime
-     * @param  mixed  $endTime
-     * @param  mixed  $plannedHours
-     * @param  mixed  $isHoliday
-     * @param  mixed  $isOvertime
+     * @param string $hourSessionId
+     * @param string $startTime
+     * @param string $endTime
+     * @param int $plannedHours
+     * @param string $workType
+     * @return void
      */
-    public function execute(string $hourSessionId, string $startTime, string $endTime, int $plannedHours, $workType): void
+    public function execute(string $hourSessionId, string $startTime, string $endTime, int $plannedHours, string $workType): void
     {
 
         // Validar la entrada de tiempo

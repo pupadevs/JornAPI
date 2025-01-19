@@ -26,6 +26,7 @@ class RegisterEmployeeService
     {
         
         DB::transaction(function () use ($data, ) {
+            
             $user = $this->registerUserService->execute($data['user']['email'], $data['user']['password']);
 
             $user->employee()->create([
@@ -42,6 +43,11 @@ class RegisterEmployeeService
             }); 
         });
     }
+    /**
+     * Summary of sendRegisterNotification
+     * @param \App\Models\User $user
+     * @return void
+     */
     private function sendRegisterNotification(User $user): void {
         try {
             SendRegisterNotification::dispatch($user);

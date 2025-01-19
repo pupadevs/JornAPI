@@ -49,12 +49,12 @@ class UpdateEmployeeAnnotations
      *     ),
      *
      *     @OA\Response(
-     *         response=400,
+     *         response=422,
      *         description="Invalid input",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="Invalid input data")
+     *             @OA\Property(property="message", type="string", example="Unprocessable Content"),
      *         )
      *     ),
      *

@@ -12,26 +12,46 @@ use Illuminate\Support\Str;
 
 class TokenService
 {
-    protected $secret;
+    /**
+     * Summary of secret
+     * @var string
+     */
+    protected string $secret;
+    /**
+     * Summary of ttl
+     * @var int
+     */
+    protected int $ttl;
 
     public function __construct()
     {
         $this->secret = config('jwt.secret');
+        $this->ttl = config('jwt.ttl');
     }
-
-    public function generateToken($userId)
+    
+    /**
+     * Summary of generateToken
+     * @param string $userId
+     * @return string
+     */
+    public function generateToken(string $userId)
     {
         $payload = [
             'sub' => $userId,
             'iat' => time(),
-            'exp' => time() + 3600, // Token válido por 30 minutos
+            'exp' => time() + ($this->ttl * 60), // Token válido por 30 minutos
             'jti' => bin2hex(random_bytes(16)), // Genera un ID único para el token
         ];
 
         return JWT::encode($payload, $this->secret, 'HS256');
     }
 
-    public function decodeToken($token): ?object
+    /**
+     * Summary of decodeToken
+     * @param string $token
+     * @return \stdClass|null
+     */
+    public function decodeToken(string $token): ?object
     {
         try {
             $tokenDecoded = JWT::decode($token, new Key($this->secret, 'HS256'));
@@ -42,7 +62,12 @@ class TokenService
         }
     }
 
-    public function getJtiFromToken($token): mixed
+    /**
+     * Summary of getJtiFromToken
+     * @param string $token
+     * @return mixed
+     */
+    public function getJtiFromToken(string $token): mixed
     {
         try {
             $decoded = JWT::decode($token, new Key($this->secret, 'HS256'));
@@ -53,7 +78,12 @@ class TokenService
         }
     }
 
-    public function generateRefreshToken($userId)
+    /**
+     * Summary of generateRefreshToken
+     * @param string $userId
+     * @return string
+     */
+    public function generateRefreshToken(string $userId): string
     {
         $refreshToken = Str::random(60); // Genera un refresh token aleatorio
 
@@ -73,8 +103,13 @@ class TokenService
         return $refreshToken;
     }
 
-    // Nueva función para validar el refresh token
-    public function validateRefreshToken($userId, $refreshToken)
+    /**
+     * Summary of validateRefreshToken
+     * @param string $userId
+     * @param string $refreshToken
+     * @return bool
+     */
+    public function validateRefreshToken(string $userId, string $refreshToken): bool
     {
         $record = DB::table('jwt_refresh_tokens')
             ->where('user_id', $userId)
@@ -88,8 +123,13 @@ class TokenService
         return false;
     }
 
-    // Opcional: función para revocar un refresh token (por ejemplo, al cerrar sesión)
-    public function revokeRefreshToken($userId, $refreshToken)
+    /**
+     * Summary of revokeRefreshToken
+     * @param string $userId
+     * @param string $refreshToken
+     * @return void
+     */
+    public function revokeRefreshToken(string $userId, string $refreshToken): void
     {
         DB::table('jwt_refresh_tokens')
             ->where('user_id', $userId)
@@ -97,7 +137,11 @@ class TokenService
             ->delete();
     }
 
-    // Opcional: función para revocar todos los refresh tokens de un usuario (ej. logout)
+    /**
+     * Summary of revokeAllRefreshTokens
+     * @param mixed $userId
+     * @return void
+     */
     public function revokeAllRefreshTokens($userId)
     {
         DB::table('jwt_refresh_tokens')

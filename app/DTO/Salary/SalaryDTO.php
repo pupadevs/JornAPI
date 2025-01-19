@@ -5,7 +5,7 @@ namespace App\DTO\Salary;
 use App\DTO\DTOInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class SalaryDTO implements DTOInterface
+final readonly class SalaryDTO implements DTOInterface
 {
     public function __construct(
         public string $startDate,

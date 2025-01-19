@@ -5,15 +5,14 @@ namespace App\DTO\HourSession;
 use App\DTO\DTOInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class HourSessionDTO implements DTOInterface
+final readonly class HourSessionDTO implements DTOInterface
 {
     public function __construct(
         public string $date,
         public string $startTime,
         public string $endTime,
         public int $plannedHours,
-        public bool $isHoliday,
-        public bool $isOvertime
+        public string $workType
 
     ) {}
 
@@ -24,8 +23,7 @@ class HourSessionDTO implements DTOInterface
             $hourSession->start_time,
             $hourSession->end_time,
             $hourSession->planned_hours,
-            $hourSession->is_holiday,
-            $hourSession->is_overtime
+            $hourSession->work_type
         );
     }
 

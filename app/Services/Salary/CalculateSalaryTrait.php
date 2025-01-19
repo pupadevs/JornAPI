@@ -13,10 +13,13 @@ trait CalculateSalaryTrait
 
     /**
      * Summary of calculateSalary
+     * @param mixed $hoursWorked
+     * @param Employee $employee
+     * @return array
      */
-    public function calculateSalary(mixed $hoursWorkeds, Employee $employee): array
+    public function calculateSalary(mixed $hoursWorked, Employee $employee): array
     {
-        $hourCalculations = $this->calculateTotalHoursWorked($hoursWorkeds);
+        $hourCalculations = $this->calculateTotalHoursWorked($hoursWorked);
         $convertToNormalHours = $this->convertDecimalToHoursAndMinutes($hourCalculations['total_normal_hours']);
         $convertToOvertimeHours = $this->convertDecimalToHoursAndMinutes($hourCalculations['total_overtime_hours']);
         $convertToHolidayHours = $this->convertDecimalToHoursAndMinutes($hourCalculations['total_holiday_hours']);
@@ -37,12 +40,14 @@ trait CalculateSalaryTrait
 
     /**
      * Summary of calculateTotalHoursWorked
+     * @param mixed $hoursWorked
+     * @return array
      */
-    private function calculateTotalHoursWorked(mixed $hoursWorkeds): array
+    private function calculateTotalHoursWorked(mixed $hoursWorked): array
     {
-        $totalNormalHours = $hoursWorkeds->sum('normal_hours');
-        $totalOvertimeHours = $hoursWorkeds->sum('overtime_hours');
-        $totalHolidayHours = $hoursWorkeds->sum('holiday_hours');
+        $totalNormalHours = $hoursWorked->sum('normal_hours');
+        $totalOvertimeHours = $hoursWorked->sum('overtime_hours');
+        $totalHolidayHours = $hoursWorked->sum('holiday_hours');
 
         return [
             'total_normal_hours' => $totalNormalHours,
@@ -54,6 +59,11 @@ trait CalculateSalaryTrait
 
     /**
      * Summary of calculateGrossSalary
+     * @param array $totalNormalHours
+     * @param array $totalOvertimeHours
+     * @param array $totalHolidayHours
+     * @param Employee $employee
+     * @return float
      */
     private function calculateGrossSalary(array $totalNormalHours, array $totalOvertimeHours, array $totalHolidayHours, Employee $employee): float
     {

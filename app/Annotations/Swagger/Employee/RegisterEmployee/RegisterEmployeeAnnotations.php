@@ -42,14 +42,21 @@ final class RegisterEmployeeAnnotations
      *     ),
      *
      *     @OA\Response(
-     *         response=400,
-     *         description="Invalid input data",
+     *         response=409,
+     *         description="User already exists",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="error", type="string", example="Validation failed")
+     *             @OA\Property(property="error", type="string", example="User already exists")
      *         )
-     *     )
+     *    ),
+     *    @OA\Response(
+     *     response=422,
+     *     description="Unprocessable Content",
+     *     @OA\JsonContent(
+     *         @OA\Property(property="error", type="string", example="Validation failed")
+     *        )
+     *    )      
      * )
      */
     public function register() {}

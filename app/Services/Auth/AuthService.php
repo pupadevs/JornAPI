@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Auth;
 
+use App\Exceptions\UserIsNotActiveException;
 use App\Exceptions\UserNotFound;
 use App\Models\User;
 use App\Services\Token\TokenService;
@@ -30,16 +31,18 @@ class AuthService
         $user = $this->validateUser($email, $password);
 
         $tokens = $this->generateTokens($user);
-       $cacheToken = $this->RedisExists($user,$tokens);
+       $cacheToken = $this->tokenExistsInRedis($user,$tokens);
        
         return $cacheToken ? ['token' => $cacheToken] : $tokens;
     }
 
     /**
      * Valida el usuario y sus credenciales.
+     *@param string $email
+     *@param string $password
+     *@throws UserNotFound
+     *@throws UnauthorizedException
      *
-     * @throws UserNotFound
-     * @throws UnauthorizedException
      */
     private function validateUser(string $email, string $password): User
     {
@@ -50,7 +53,7 @@ class AuthService
         }
 
         if (! $user->is_active) {
-            throw new UnauthorizedException('User not active. Please contact your administrator.', 401);
+            throw new UserIsNotActiveException();
         }
 
         if (! Hash::check($password, $user->password)) {
@@ -63,28 +66,25 @@ class AuthService
     /**
      * Genera el token y el refresh token para el usuario.
      * @param User $user
-     * @return array
+     * @return string
      */
-    private function generateTokens(User $user): array
+    private function generateTokens(User $user): string
     {
-        $token = $this->jwtService->generateToken($user->id);
-        $refreshToken = $this->jwtService->generateRefreshToken($user->id);
+         return $this->jwtService->generateToken($user->id);
 
-        return [
-            'token' => $token,
-            'refreshToken' => $refreshToken,
-        ];
+      
     }
+
     /**
      * Summary of RedisExists
      * @param User $user
-     * @param array $tokens
+     * @param string $token
      * @return mixed
      */
 
-    private function RedisExists(User $user,array  $tokens) {
+    private function tokenExistsInRedis(User $user,string  $token) {
         if(!Redis::exists("user:{$user->id}:token")) {
-        Redis::set("user:{$user->id}:token", $tokens['token'], 'EX', 3600);
+        Redis::set("user:{$user->id}:token", $token, 'EX', 3600);
 
         }
         return  Redis::get("user:{$user->id}:token");

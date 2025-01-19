@@ -13,7 +13,13 @@ class SalaryService implements SalaryServiceInterface
 {
     use CalculateSalaryTrait;
 
-    public function execute(string $employeeId, string $date)
+    /**
+     * Summary of execute
+     * @param string $employeeId
+     * @param string $date
+     * @return void
+     */
+    public function execute(string $employeeId, string $date): void
     {
         $date = new Carbon($date);
         // Primer día del mes
@@ -24,19 +30,15 @@ class SalaryService implements SalaryServiceInterface
 
         $employee = Employee::findOrFail($employeeId);
 
-        // Obtenemos todas las HourSession en el rango y pluck para obtener solo los IDs
-        $hourSessions = $employee->hourSessions()
-            ->whereBetween('date', [$startOfMonth, $endOfMonth])
-            ->with('hourWorked')
-            ->get();
+        
 
-        $salary = Salary::where('employee_id', $employeeId)
-            ->whereBetween('start_date', [$startOfMonth, $endOfMonth])
-            ->whereBetween('end_date', [$startOfMonth, $endOfMonth])
-            ->first();
+        // Obtenemos todas las HourSession en el rango y pluck para obtener solo los IDs
+        $hourSessions = $this->prepareHourSession($employee, $startOfMonth, $endOfMonth);
+
+        $salary = $this->prepateSalary($employeeId,$startOfMonth,$endOfMonth);
 
         // Agrupar los datos en una colección
-        $hourWorkedCollection = $hourSessions->pluck('hourWorked');
+        $hourWorkedCollection = $hourSessions->pluck('hourWorked')->select('total_normal_hours','total_overtime_hours','total_holiday_hours');
         $dataSalary = $this->calculateSalary($hourWorkedCollection, $employee);
 
         // Ahora puedes usar la colección $hourWorkeds para cálculos adicionales o sumar sus valores
@@ -70,8 +72,32 @@ class SalaryService implements SalaryServiceInterface
 
         }
 
-        // Calculamos el salario y guardamos en la entidad Salary
+    }
 
-        // Devolvemos la colección $hourWorkeds si necesitas acceder a los detalles en otros puntos
+    /**
+     * Summary of prepareHourSession
+     * @param \App\Models\Employee $employee
+     * @param mixed $startOfMonth
+     * @param mixed $endOfMonth
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    private function prepareHourSession(Employee $employee, $startOfMonth, $endOfMonth){
+      return  $employee->hourSessions()
+        ->whereBetween('date', [$startOfMonth, $endOfMonth])
+        ->with('hourWorked')
+        ->get();
+    }
+    /**
+     * Summary of prepateSalary
+     * @param string $employeeId
+     * @param mixed $startOfMonth
+     * @param mixed $endOfMonth
+     * @return Salary|null
+     */
+    private function prepateSalary(string $employeeId, $startOfMonth, $endOfMonth): Salary|null{
+      return  Salary::where('employee_id', $employeeId)
+        ->whereBetween('start_date', [$startOfMonth, $endOfMonth])
+        ->whereBetween('end_date', [$startOfMonth, $endOfMonth])
+        ->first();
     }
 }

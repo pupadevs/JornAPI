@@ -22,6 +22,7 @@ class UpdateEmployeeService
      * @param  mixed  $holidayHourlyRate
      * @param  mixed  $irpf
      * @param  mixed  $uuid
+     * @return array
      *
      * @throws \App\Exceptions\UserNotFound
      */
@@ -31,12 +32,9 @@ class UpdateEmployeeService
         ?float $overtimeHourlyRate,
         ?float $holidayHourlyRate,
         ?float $irpf,
-        ?string $uuid): array
+        Employee $employee): array
     {
-        $employee = Employee::where('user_id', $uuid)->select('name', 'company_name', 'normal_hourly_rate', 'overtime_hourly_rate', 'holiday_hourly_rate', 'irpf')->first();
-        if (! $employee) {
-            throw new UserNotFound;
-        }
+       
 
         DB::transaction(function () use ($employee, $name, $company, $normalHourlyRate, $overtimeHourlyRate, $holidayHourlyRate, $irpf) {
 

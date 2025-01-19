@@ -15,17 +15,15 @@ class RegisterUserService
 {
     /**
      * Summary of execute
-     * @param mixed $email
-     * @param mixed $password
+     * @param string $email
+     * @param string $password
      * @throws \App\Exceptions\NullDataException
      * @throws \App\Exceptions\UserAlreadyExists
      * @return \App\Models\User
      */
-    public function execute(?string $email, ?string $password): User
+    public function execute(string $email, string $password): User
     {
-        if ($email == null || $password == null) {
-            throw new NullDataException('Email and password are required', 400);
-        }
+    
         $user = User::where('email', $email)->first();
         if ($user) {
             throw new UserAlreadyExists;

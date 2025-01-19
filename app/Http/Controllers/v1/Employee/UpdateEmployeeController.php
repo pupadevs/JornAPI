@@ -36,7 +36,7 @@ class UpdateEmployeeController extends Controller
                 $request->overtime_hourly_rate ?? null,
                 $request->holiday_hourly_rate ?? null,
                 $request->irpf ?? null,
-                $user->id);
+                $user->employee);
 
             return response()->json(['message' => 'Employee updated successfully', 'employee' => $employee], 200);
         } catch (UserNotFound $e) {

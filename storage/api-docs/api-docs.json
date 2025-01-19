@@ -323,6 +323,10 @@
                                         "type": "string",
                                         "example": "john.doe@example.com"
                                     },
+                                    "company_name": {
+                                        "type": "string",
+                                        "example": "Company Inc."
+                                    },
                                     "password": {
                                         "type": "string",
                                         "example": "securepassword123"
@@ -375,8 +379,24 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Invalid input data",
+                    "409": {
+                        "description": "User already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "User already exists"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Content",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -478,7 +498,7 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid token",
+                        "description": "Token not provided",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -836,7 +856,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized or invalid token",
+                        "description": "Token not provided",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -996,7 +1016,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized or invalid token",
+                        "description": "Token not provided",
                         "content": {
                             "application/json": {
                                 "schema": {

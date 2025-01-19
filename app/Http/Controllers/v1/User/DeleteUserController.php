@@ -13,6 +13,7 @@ class DeleteUserController extends Controller
 {
     /**
      * Summary of __construct
+     * @param \App\Services\User\DeleteUserService $deleteUserService
      */
     public function __construct(private DeleteUserService $deleteUserService) {}
 

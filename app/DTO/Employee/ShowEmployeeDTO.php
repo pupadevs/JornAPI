@@ -6,7 +6,7 @@ namespace App\DTO\Employee;
 use App\DTO\DTOInterface;
 use Illuminate\Database\Eloquent\Model;
 
- readonly class ShowEmployeeDTO implements DTOInterface{
+ final readonly class ShowEmployeeDTO implements DTOInterface{
 
     public function __construct(
         public string $name,

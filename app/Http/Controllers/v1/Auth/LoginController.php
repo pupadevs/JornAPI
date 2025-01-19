@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1\Auth;
 
+use App\Exceptions\UserIsNotActiveException;
 use App\Exceptions\UserNotFound;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
@@ -19,6 +20,7 @@ class LoginController extends Controller
 {
     /**
      * Summary of __construct
+     * @param AuthService $authService
      */
     public function __construct(private AuthService $authService) {}
 
@@ -37,7 +39,7 @@ class LoginController extends Controller
             $data = $this->authService->execute($request->email, $request->password);
 
             return response()->json(['token' => $data['token']], 200);
-        } catch (UserNotFound|UnauthorizedException $e) {
+        } catch (UserNotFound|UnauthorizedException | UserIsNotActiveException $e) {
             throw new HttpResponseException(response()->json(['message' => $e->getMessage()], $e->getCode()));
         }
 

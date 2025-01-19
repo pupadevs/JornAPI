@@ -11,11 +11,17 @@ use Carbon\Carbon;
 
 class FindSalaryByMonthService
 {
-    public function execute(string $employeeId, ?string $month, ?string $year)
+    /**
+     * Summary of execute
+     * @param string $employeeId
+     * @param mixed $month
+     * @param mixed $year
+     * @throws \App\Exceptions\SalaryNotFoundException
+     * @return array
+     */
+    public function execute(string $employeeId, string $month, string $year): array
     {
-        if (! $month || ! $year) {
-            throw new SalaryNotFoundException;
-        }
+       
         $str = "{$year}-{$month}-01";
         $date = new Carbon($str);
         $salary = Salary::where('employee_id', $employeeId)->whereMonth('start_date', $month)->whereYear('start_date', $year)->select('start_date', 'end_date', 'total_normal_hours', 'total_overtime_hours', 'total_holiday_hours', 'total_gross_salary', 'total_net_salary')->first();

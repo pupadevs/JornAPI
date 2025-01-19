@@ -14,6 +14,7 @@ class ShowSalaryByMonthController extends Controller
 {
     /**
      * Summary of __construct
+     * @param \App\Services\Salary\FindSalaryByMonthService $findSalaryByMonthService
      */
     public function __construct(private FindSalaryByMonthService $findSalaryByMonthService) {}
 

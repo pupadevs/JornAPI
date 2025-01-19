@@ -15,7 +15,7 @@ class LogOutService
     /**
      * Summary of logOut
      *
-     * @param  string  $userId
+     * @param  string  $token
      * @return void
      *
      * @throws \App\Exceptions\InvalidTokenException
@@ -30,6 +30,5 @@ class LogOutService
         }
 
         Redis::del("user:$userID:token");
-        $this->tokenService->revokeAllRefreshTokens($userID);
     }
 }

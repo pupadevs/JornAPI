@@ -18,7 +18,7 @@ class CheckUserIsActive
     public function handle(Request $request, Closure $next): Response
     {
         try {
-            if ($request->user()->is_active == 0) {
+            if ($request->user()->is_active === 0) {
                 throw new UserIsNotActiveException;
             }
         } catch (UserIsNotActiveException $e) {

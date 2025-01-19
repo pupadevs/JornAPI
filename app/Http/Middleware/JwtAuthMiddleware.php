@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 class JwtAuthMiddleware
 {
-    protected $jwtService;
+    protected TokenService $jwtService;
 
     public function __construct(TokenService $jwtService)
     {

@@ -18,6 +18,7 @@ class LogOutController extends Controller
 {
     /**
      * Summary of __construct
+     * @param LogOutService $logOutService
      */
     public function __construct(private LogOutService $logOutService) {}
 

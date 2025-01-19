@@ -12,18 +12,19 @@ class FindHourSessionService
 
     /**
      * Summary of execute
-     *
-     * @return \App\DTO\HourSession\HourSessionDTO
-     *
-     * @throws \App\Exceptions\HourSessionNotFoundException
+     * 
+     *@param string $employeeId
+     *@param string $date
+     *@return array
+     *@throws \App\Exceptions\HourSessionNotFoundException
      */
-    public function execute(string $employeeId, string $date): array
+    public function execute(string $employeeId, string $date): HourSessionDTO
     {
         $hourSession = HourSession::where('employee_id', $employeeId)->where('date', $date)->select('date', 'start_time', 'end_time', 'planned_hours', 'work_type')->first();
         if (! $hourSession) {
             throw new HourSessionNotFoundException;
         }
 
-        return HourSessionDTO::toArray($hourSession->toArray());
+        return HourSessionDTO::fromModel($hourSession);
     }
 }
